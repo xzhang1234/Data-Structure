@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class BinaryTree {
     private TreeNode root;
 
@@ -5,16 +7,8 @@ public class BinaryTree {
         TreeNode left;
         TreeNode right;
         int data;
-        public TreeNode() {
-            this.left = null;
-            this.right = null;
-            this.data = 0;
-        }
-        public TreeNode(int data) {
-            this.left = null;
-            this.right = null;
-            this.data = data;
-        }
+        public TreeNode() {}
+        public TreeNode(int data) {this.data = data;}
     }
 
     /**
@@ -39,14 +33,165 @@ public class BinaryTree {
     }
 
     /**
-     * Build a tree from array
+     * Build a binary search tree from array
      * @param array
      */
-    public void build (int[] array) {
+    public void buildBST (int[] array) {
         for (int i = 0; i < array.length; i++) {
             insert(array[i]);
         }
     }
+
+    public void buildMinDepthBT (int[] array) {
+
+    }
+
+    public void buildBalancedBT (int[] array) {
+
+    }
+    
+    public void bfs() {
+
+    }
+
+    /**
+     * DFS preorder method 1, use a visited set, visited when push, add to list when push
+     * @return
+     */
+    public List<Integer> dfsPreOrder1() {
+        List<Integer> list = new ArrayList<>();
+
+        if (root == null) return list;
+
+        Stack<TreeNode> stack = new Stack<>();
+        Set<TreeNode> visited = new HashSet<>();
+        stack.push(root);
+        list.add(root.data);
+        visited.add(root);
+        while (!stack.empty()) {
+            TreeNode node = stack.peek();
+            if (node.left != null && !visited.contains(node.left)) {
+                stack.push(node.left);
+                list.add(node.left.data);
+                visited.add(node.left);
+            }
+            else if (node.right != null && !visited.contains(node.right)) {
+                stack.push(node.right);
+                list.add(node.right.data);
+                visited.add(node.right);
+            }
+            else {
+                stack.pop();
+            }
+        }
+
+        return list;
+
+    }
+
+    /**
+     * DFS preorder method 2, no visited set, add to list when pop, push right first
+     * @return
+     */
+    public List<Integer> dfsPreOrder2() {
+        if (root == null) return new ArrayList<>();
+
+        List<Integer> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.empty()) {
+            TreeNode node = stack.pop();
+            list.add(node.data);
+            if (node.right != null) stack.push(node.right);
+            if (node.left != null) stack.push(node.left);
+        }
+
+        return list;
+    }
+
+    /**
+     * DFS preorder method 3, recursive
+     * @return
+     */
+    public List<Integer> dfsPreOrder3() {
+        return dfsPreOrderRecursive(root);
+    }
+
+    private List<Integer> dfsPreOrderRecursive(TreeNode node) {
+        if (node == null) return new ArrayList<>();
+
+        List<Integer> list = new ArrayList<>();
+
+        list.add(node.data);
+        list.addAll(dfsPreOrderRecursive(node.left));
+        list.addAll(dfsPreOrderRecursive(node.right));
+
+        return list;
+    }
+
+
+
+    /**
+     * DFS postorder method 1
+     * @return
+     */
+    public List<Integer> dfsPostOrder1() {
+        List<Integer> list = new ArrayList<>();
+
+        if (root == null) return list;
+
+        Stack<TreeNode> stack = new Stack<>();
+        Set<TreeNode> visited = new HashSet<>();
+        stack.push(root);
+
+        visited.add(root);
+        while (!stack.empty()) {
+            TreeNode node = stack.peek();
+            if (node.left != null && !visited.contains(node.left)) {
+                stack.push(node.left);
+                visited.add(node.left);
+            }
+            else if (node.right != null && !visited.contains(node.right)) {
+                stack.push(node.right);
+                visited.add(node.right);
+            }
+            else {
+                TreeNode top = stack.pop();
+                list.add(top.data);
+            }
+        }
+
+        return list;
+
+    }
+
+    /**
+     * DFS postorder method 2
+     * @return
+     */
+    public List<Integer> dfsPostOrder2() {
+        return dfsPostOrderRecursive(root);
+    }
+
+    private List<Integer> dfsPostOrderRecursive(TreeNode node) {
+        if (node == null) return new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        list.addAll(dfsPostOrderRecursive(node.left));
+        list.addAll(dfsPostOrderRecursive(node.right));
+        list.add(node.data);
+        return list;
+    }
+
+
+
+    public void dfsInOrder() {
+
+    }
+
+    public void dfsInOrderRecursive() {
+
+    }
+
 
     /**
      * Output tree data inorder
@@ -69,10 +214,32 @@ public class BinaryTree {
     }
 
     public static void main(String[] args) {
-        int[] array = {1, 3, 2, 4};
+        int[] array = {1, 0, 3, 2, 4};
         BinaryTree tree = new BinaryTree();
         System.out.println(tree.toString());
-        tree.build(array);
+        tree.buildBST(array);
         System.out.println(tree.toString());
+
+        System.out.print("\n DFS preorder traversal1: ");
+        List<Integer> traversalList = tree.dfsPreOrder1();
+        for (int i : traversalList) {
+            System.out.print(i + " ");
+        }
+
+        System.out.print("\n DFS preorder traversal2: ");
+        traversalList = tree.dfsPreOrder2();
+        for (int i : traversalList) {
+            System.out.print(i + " ");
+        }
+
+        System.out.print("\n DFS preorder traversal3: ");
+        traversalList = tree.dfsPreOrder3();
+        for (int i : traversalList) {
+            System.out.print(i + " ");
+        }
+
+        //       1
+        //     0   3
+        //       2   4
     }
 }
