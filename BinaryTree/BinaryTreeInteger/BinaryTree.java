@@ -49,8 +49,52 @@ public class BinaryTree {
     public void buildBalancedBT (int[] array) {
 
     }
-    
-    public void bfs() {
+
+    // Compared with DFS, do not need visited set, do not need peek()
+    public List<Integer> bfs1() {
+
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            list.add(node.data);
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+
+        return list;
+    }
+
+
+    public List<List<Integer>> bfs2() {
+
+
+        List<List<Integer>> list = new ArrayList<>();
+        if (root == null) return list;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+
+            List<Integer> sublist = new ArrayList<>();
+
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                sublist.add(node.data);
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+
+            list.add(sublist);
+
+        }
+
+        return list;
+
 
     }
 
@@ -238,6 +282,20 @@ public class BinaryTree {
             System.out.print(i + " ");
         }
 
+        System.out.print("\n DFS bfs traversal: ");
+        traversalList = tree.bfs1();
+        for (int i : traversalList) {
+            System.out.print(i + " ");
+        }
+
+        System.out.print("\n DFS level traversal: ");
+        List<List<Integer>> levelOrderTraversal = tree.bfs2();
+        for (int level = 0; level < levelOrderTraversal.size(); level++) {
+            System.out.print("\n level " + level + ": ");
+            for (int i : levelOrderTraversal.get(level)) {
+                System.out.print(i + " ");
+            }
+        }
         //       1
         //     0   3
         //       2   4
